@@ -11,6 +11,10 @@ env:
   CONTAINER_REGISTRY: "${{vars.CONTAINER_REGISTERY }}"
   DOCKER_USERNAME: "${{ vars.DOCKER_USERNAME }}"
   IMAGE_NAME: ga-application
+  MONGO_URI: 'mongodb+srv://ahmed:gaITI@2025@github-actions-iti-2025.global.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000'
+  #MONGO_URI: 'github-actions-iti-2025.global.mongocluster.cosmos.azure.com'
+  MONGO_USERNAME: ahmed
+  MONGO_PASSWORD: gaITI@2025
 
 jobs:
   # unit-testing:
@@ -108,3 +112,59 @@ jobs:
     #     # Test the /live endpoint
     #     echo "Testing /live endpoint"
     #     wget -q -O - http://127.0.0.1:3000/live | grep live
+
+
+  dev-deploy:
+    name: Deploy to Dev Env
+    runs-on: ubuntu-latest
+    needs: docker
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install kubectl CLI
+      uses: azure/setup-kubectl@v3
+      with:
+            version: '1.26.0'
+    - name: Set Kubeconfig Context
+      uses: azure/k8s-set-context@v3
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBECONFIG }}
+
+    - name: Fetch Kubernetes Cluster Details
+      run: |
+            kubectl version --short
+            echo "-----------------------------------------"
+            kubectl get nodes
+
+    - name: Replace tokens in manifests
+      uses: cschlieden/replace-tokens@v1
+      with:
+            tokenPrefix: '_{_'
+            tokenSuffix: '_}_'
+            files:
+              - kubernetes/development/*.yaml
+      env:
+            NAMESPACE: ${{ vars.NAMESPACE }}
+            REPLICAS: ${{ vars.REPLICAS }}
+            IMAGE: $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:AbdallahElaraby-${{ github.sha }}
+
+
+    - name: Show processed manifests
+      run: cat kubernetes/development/*.yaml
+
+
+    - name: Create MongoDB secret
+      run: |
+            kubectl -n ${{ vars.NAMESPACE }} create secret generic mongo-db-creds \
+            --from-literal=MONGO_URI=${{ env.MONGO_URI }} \
+            --from-literal=MONGO_USERNAME=${{ env.MONGO_USERNAME }} \
+            --from-literal=MONGO_PASSWORD=${{ env.MONGO_PASSWORD }} \
+            --save-config \
+            --dry-run=client \
+            -o yaml | kubectl apply -f -
+
+
+    - name: Deploy manifests
+      run: kubectl apply -f kubernetes/development
