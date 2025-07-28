@@ -127,18 +127,18 @@ jobs:
       with:
             version: 'latest'
 
-    # - name: Decode kubeconfig
-    #   run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig.yaml
+    - name: Decode kubeconfig
+      run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig.yaml
 
-    # - name: Set Kubeconfig context
-    #   uses: azure/k8s-set-context@v3
-    #   with:
-    #       method: kubeconfig
-    #       kubeconfig: kubeconfig.yaml
-    - name: Set up Kubeconfig
-      run: |
-        export KUBECONFIG=./kubernetes/ifconfig.yaml 
-        kubectl get nodes
+    - name: Set Kubeconfig context
+      uses: azure/k8s-set-context@v3
+      with:
+          method: kubeconfig
+          kubeconfig: kubeconfig.yaml
+    # - name: Set up Kubeconfig
+    #   run: |
+    #     export KUBECONFIG=./kubernetes/ifconfig.yaml 
+    #     kubectl get nodes
 
 
 
