@@ -1,10 +1,11 @@
 name: Solar System Workflow
 
 on: 
-  push:
-    branches:
-      - main
-      - 'feature/*'
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  #     - 'feature/*'
     
 jobs:
     unit-testing:
