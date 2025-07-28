@@ -11,6 +11,7 @@ on:
 
 jobs:
   unit-testing:
+    timeout-minutes: 3
     name: Unit Testing
     runs-on: ubuntu-latest
     services:
@@ -40,13 +41,25 @@ jobs:
         run: npm install
 
 
+      - name: Wait for MongoDB to be ready
+        run: |
+          echo "Waiting for MongoDB..."
+          for i in {1..10}; do
+            nc -z localhost 27017 && echo "MongoDB is up!" && break
+            echo "Still waiting for MongoDB..."
+            sleep 3
+          done
+
       - name: Run Unit Tests
         env:
           MONGODB_HOST: mongodb-service
           MONGODB_PORT: 27017
         continue-on-error: true
         run: npm test
-    
+
+
+
+
       - name: Archive Test Result
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
