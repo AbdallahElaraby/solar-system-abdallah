@@ -17,50 +17,50 @@ env:
   MONGO_PASSWORD: gaITI@2025
 
 jobs:
-  # unit-testing:
-  #   name: Unit Testing
-  #   runs-on: ubuntu-latest
-  #   services:
-  #     mongodb-service:
-  #       image: mongo:latest
-  #   env:
-  #     MONGO_URI: 'mongodb+srv://ahmed:gaITI@2025@github-actions-iti-2025.global.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000'
-  #     #MONGO_URI: 'github-actions-iti-2025.global.mongocluster.cosmos.azure.com'
-  #     MONGO_USERNAME: ahmed
-  #     MONGO_PASSWORD: gaITI@2025
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v4
+  unit-testing:
+    name: Unit Testing
+    runs-on: ubuntu-latest
+    services:
+      mongodb-service:
+        image: mongo:latest
+    env:
+      MONGO_URI: 'mongodb+srv://ahmed:gaITI%402025@github-actions-iti-2025.global.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000'
+      #MONGO_URI: 'github-actions-iti-2025.global.mongocluster.cosmos.azure.com'
+      MONGO_USERNAME: ahmed
+      MONGO_PASSWORD: gaITI@2025
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
 
-  #     - name: Setup Node.js Environment
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 18
-  #         cache: 'npm'
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
 
-  #     - name: Cache NPM dependencies
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: node_modules
-  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
-  #     - name: Install Dependencies
-  #       run: npm install
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Install Dependencies
+        run: npm install
 
 
-  #     - name: Run Unit Tests
-  #       # env:
-  #       #   MONGODB_HOST: mongodb-service
-  #       #   MONGODB_PORT: 27017
-  #       continue-on-error: true
-  #       run: npm test
+      - name: Run Unit Tests
+        # env:
+        #   MONGODB_HOST: mongodb-service
+        #   MONGODB_PORT: 27017
+        continue-on-error: true
+        run: npm test
     
-  #     - name: Archive Test Result
-  #       if: github.ref == 'refs/heads/main'
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: Mocha-Test-Result
-  #         path: test-results.xml
+      - name: Archive Test Result
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mocha-Test-Result
+          path: test-results.xml
 
   # docker-build:
   #   - name: Docker Hub Login
@@ -74,21 +74,40 @@ jobs:
   #       context: .
   #       push: true
   #       tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
-  docker:
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
 
-      - name: Docker Build
-        run: docker build -t $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:AbdallahElaraby-${{ github.sha }} .
 
-      - name: Docker Login
-        run: echo "${{ secrets.PASSWORD }}" | docker login $CONTAINER_REGISTRY -u "$DOCKER_USERNAME" --password-stdin
 
-      - name: Docker Push
-        run: docker push $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:AbdallahElaraby-${{ github.sha }}
+
+
+
+
+
+
+
+
+
+
+
+
+  # docker:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 3
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v4
+
+  #     - name: Docker Build
+  #       run: docker build -t $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:AbdallahElaraby-${{ github.sha }} .
+
+  #     - name: Docker Login
+  #       run: echo "${{ secrets.PASSWORD }}" | docker login $CONTAINER_REGISTRY -u "$DOCKER_USERNAME" --password-stdin
+
+  #     - name: Docker Push
+  #       run: docker push $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:AbdallahElaraby-${{ github.sha }}
+
+
+
+
 
     # - name: Docker Image Testing
     #   run: |
@@ -114,86 +133,86 @@ jobs:
     #     wget -q -O - http://127.0.0.1:3000/live | grep live
 
 
-  dev-deploy:
-    name: Deploy to Dev Env
-    runs-on: ubuntu-latest
-    needs: docker
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+  # dev-deploy:
+  #   name: Deploy to Dev Env
+  #   runs-on: ubuntu-latest
+  #   needs: docker
+  #   steps:
+  #   - name: Checkout repository
+  #     uses: actions/checkout@v3
 
-    - name: Install kubectl CLI
-      uses: azure/setup-kubectl@v3
-      with:
-            version: 'latest'
+  #   - name: Install kubectl CLI
+  #     uses: azure/setup-kubectl@v3
+  #     with:
+  #           version: 'latest'
 
-    - name: Decode kubeconfig
-      run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig.yaml
+  #   - name: Decode kubeconfig
+  #     run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig.yaml
 
-    - name: Set Kubeconfig context
-      uses: azure/k8s-set-context@v3
-      with:
-          method: kubeconfig
-          kubeconfig: kubeconfig.yaml
-    # - name: Set up Kubeconfig
-    #   run: |
-    #     export KUBECONFIG=./kubernetes/ifconfig.yaml 
-    #     kubectl get nodes
-
-
+  #   - name: Set Kubeconfig context
+  #     uses: azure/k8s-set-context@v3
+  #     with:
+  #         method: kubeconfig
+  #         kubeconfig: kubeconfig.yaml
+  #   # - name: Set up Kubeconfig
+  #   #   run: |
+  #   #     export KUBECONFIG=./kubernetes/ifconfig.yaml 
+  #   #     kubectl get nodes
 
 
-    - name: Fetch Kubernetes Cluster Details
-      run: |
-            kubectl version --client
-            echo "-----------------------------------------"
-            kubectl get nodes
-            kubectl create namespace ${{ vars.NAMESPACE }}
-
-    # - name: Replace tokens in manifests
-    #   uses: qmiroslav/replace-tokens@v1
-    #   with:
-    #         tokenPrefix: '_{_'
-    #         tokenSuffix: '_}_'
-    #         files:
-    #           kubernetes/development/*.yaml           
-    #   env:
-    #         NAMESPACE: ${{ vars.NAMESPACE }}
-    #         REPLICAS: ${{ vars.REPLICAS }}
-    #         IMAGE: $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:AbdallahElaraby-${{ github.sha }}
-    - name: Replace tokens in manifests (all YAMLs)
-      run: |
-        for file in kubernetes/development/*.yaml; do
-          echo "Processing $file"
-          envsubst < "$file" > "tmp.yaml" && mv "tmp.yaml" "$file"
-        done
-      shell: bash
-      env:
-        NAMESPACE: ${{ vars.NAMESPACE }}
-        REPLICAS: ${{ vars.REPLICAS }}
-        IMAGE: ${{ vars.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:AbdallahElaraby-${{ github.sha }}
 
 
-    - name: Show processed manifests
-      run: cat kubernetes/development/*.yaml
+  #   - name: Fetch Kubernetes Cluster Details
+  #     run: |
+  #           kubectl version --client
+  #           echo "-----------------------------------------"
+  #           kubectl get nodes
+  #           kubectl create namespace ${{ vars.NAMESPACE }}
+
+  #   # - name: Replace tokens in manifests
+  #   #   uses: qmiroslav/replace-tokens@v1
+  #   #   with:
+  #   #         tokenPrefix: '_{_'
+  #   #         tokenSuffix: '_}_'
+  #   #         files:
+  #   #           kubernetes/development/*.yaml           
+  #   #   env:
+  #   #         NAMESPACE: ${{ vars.NAMESPACE }}
+  #   #         REPLICAS: ${{ vars.REPLICAS }}
+  #   #         IMAGE: $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:AbdallahElaraby-${{ github.sha }}
+  #   - name: Replace tokens in manifests (all YAMLs)
+  #     run: |
+  #       for file in kubernetes/development/*.yaml; do
+  #         echo "Processing $file"
+  #         envsubst < "$file" > "tmp.yaml" && mv "tmp.yaml" "$file"
+  #       done
+  #     shell: bash
+  #     env:
+  #       NAMESPACE: ${{ vars.NAMESPACE }}
+  #       REPLICAS: ${{ vars.REPLICAS }}
+  #       IMAGE: ${{ vars.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:AbdallahElaraby-${{ github.sha }}
 
 
-    - name: Create MongoDB secret
-      run: |
-            kubectl -n ${{ vars.NAMESPACE }} create secret generic mongo-db-creds \
-            --from-literal=MONGO_URI=${{ env.MONGO_URI }} \
-            --from-literal=MONGO_USERNAME=${{ env.MONGO_USERNAME }} \
-            --from-literal=MONGO_PASSWORD=${{ env.MONGO_PASSWORD }} \
-            --save-config \
-            --dry-run=client \
-            -o yaml | kubectl apply -f -
+  #   - name: Show processed manifests
+  #     run: cat kubernetes/development/*.yaml
 
 
-    - name: Deploy manifests
-      run: kubectl apply -f kubernetes/development
-    - name: Fetch Kubernetes Cluster Details after deployment
-      run: |
+  #   - name: Create MongoDB secret
+  #     run: |
+  #           kubectl -n ${{ vars.NAMESPACE }} create secret generic mongo-db-creds \
+  #           --from-literal=MONGO_URI=${{ env.MONGO_URI }} \
+  #           --from-literal=MONGO_USERNAME=${{ env.MONGO_USERNAME }} \
+  #           --from-literal=MONGO_PASSWORD=${{ env.MONGO_PASSWORD }} \
+  #           --save-config \
+  #           --dry-run=client \
+  #           -o yaml | kubectl apply -f -
+
+
+  #   - name: Deploy manifests
+  #     run: kubectl apply -f kubernetes/development
+  #   - name: Fetch Kubernetes Cluster Details after deployment
+  #     run: |
             
-            echo "-----------------------------------------"
-            kubectl get pods --namespace ${{ vars.NAMESPACE }}
+  #           echo "-----------------------------------------"
+  #           kubectl get pods --namespace ${{ vars.NAMESPACE }}
             
