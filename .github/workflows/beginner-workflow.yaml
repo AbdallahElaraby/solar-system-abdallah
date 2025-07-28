@@ -144,7 +144,8 @@ jobs:
             tokenPrefix: '_{_'
             tokenSuffix: '_}_'
             files:
-              - kubernetes/development/*.yaml
+              kubernetes/development/*.yaml 
+                    
       env:
             NAMESPACE: ${{ vars.NAMESPACE }}
             REPLICAS: ${{ vars.REPLICAS }}
