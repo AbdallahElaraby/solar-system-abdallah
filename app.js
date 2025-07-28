@@ -24,16 +24,20 @@ app.use(cors())
 //     }
 // })
 
-mongoose.connect(process.env.MONGO_URI, {
-     useNewUrlParser: true,
-     useUnifiedTopology: true
-}, function(err) {
+mongoose.connect(
+  'mongodb://ahmed:gaITI%402025@github-actions-iti-2025.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  },
+  function (err) {
     if (err) {
-        console.log("MongoDB connection error: " + err)
+      console.log("MongoDB connection error: " + err);
     } else {
-        console.log("✅ MongoDB connected successfully")
+      console.log("✅ MongoDB connected successfully");
     }
-});
+  }
+);
 
 
 
