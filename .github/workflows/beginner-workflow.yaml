@@ -208,13 +208,20 @@ jobs:
             --save-config \
             --dry-run=client \
             -o yaml | kubectl apply -f -
+      env:
+        KUBECONFIG: ./kubernetes/ifconfig.yaml
 
 
     - name: Deploy manifests
       run: kubectl apply -f kubernetes/development
+      env:
+        KUBECONFIG: ./kubernetes/ifconfig.yaml
     - name: Fetch Kubernetes Cluster Details after deployment
       run: |
             
             echo "-----------------------------------------"
             kubectl get pods --namespace ${{ vars.NAMESPACE }}
-            
+            kubectl get services --namespace ${{ vars.NAMESPACE }}
+            kubectl get deployments --namespace ${{ vars.NAMESPACE }} 
+      env:
+        KUBECONFIG: ./kubernetes/ifconfig.yaml
