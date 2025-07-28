@@ -134,9 +134,10 @@ jobs:
 
     - name: Fetch Kubernetes Cluster Details
       run: |
-            kubectl version --short
+            kubectl version 
             echo "-----------------------------------------"
             kubectl get nodes
+            kubectl create namespace ${{ vars.NAMESPACE }}
 
     # - name: Replace tokens in manifests
     #   uses: qmiroslav/replace-tokens@v1
@@ -179,3 +180,9 @@ jobs:
 
     - name: Deploy manifests
       run: kubectl apply -f kubernetes/development
+    - name: Fetch Kubernetes Cluster Details after deployment
+      run: |
+            kubectl version 
+            echo "-----------------------------------------"
+            kubectl get pods --namespace ${{ vars.NAMESPACE }}
+            
