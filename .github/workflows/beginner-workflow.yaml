@@ -200,10 +200,10 @@ jobs:
         KUBECONFIG: ./kubernetes/ifconfig.yaml
 
 
-    - name: Deploy manifests
-      run: kubectl apply -f kubernetes/development
-      env:
-        KUBECONFIG: ./kubernetes/ifconfig.yaml
+    # - name: Deploy manifests
+    #   run: kubectl apply -f kubernetes/development
+    #   env:
+    #     KUBECONFIG: ./kubernetes/ifconfig.yaml
     - name: Fetch Kubernetes Cluster Details after deployment
       run: |
             
@@ -211,6 +211,17 @@ jobs:
             kubectl get pods --namespace ${{ vars.NAMESPACE }}
             kubectl get services --namespace ${{ vars.NAMESPACE }}
             kubectl get deployments --namespace ${{ vars.NAMESPACE }} 
+
+      env:
+        KUBECONFIG: ./kubernetes/ifconfig.yaml
+    - name: Fetch Kubernetes Cluster Details after deployment
+      run: |
+            sleep 20
+            echo "-----------------------------------------"
+            kubectl get pods --namespace ${{ vars.NAMESPACE }}
+            kubectl get services --namespace ${{ vars.NAMESPACE }}
+            kubectl get deployments --namespace ${{ vars.NAMESPACE }}
+            kubectl get logs --namespace ${{ vars.NAMESPACE }} solar-system-7df8f85dd5-hpmgb 
 
       env:
         KUBECONFIG: ./kubernetes/ifconfig.yaml
