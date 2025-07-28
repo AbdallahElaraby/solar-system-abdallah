@@ -146,18 +146,16 @@ jobs:
       with:
             version: 'latest'
 
-    # - name: Decode kubeconfig
-    #   run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig.yaml
-
-    # - name: Set Kubeconfig context
-    #   uses: azure/k8s-set-context@v3
-    #   with:
-    #       method: kubeconfig
-    #       kubeconfig: kubeconfig.yaml
-    - name: Set up Kubeconfig
-      run: kubectl get nodes
-      env:
-        KUBECONFIG: ./kubernetes/ifconfig.yaml
+    - name: Set Kubeconfig Context
+      uses: azure/k8s-set-context@v4.0.1
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBECONFIG }}
+      
+    # - name: Set up Kubeconfig
+    #   run: kubectl get nodes
+    #   env:
+    #     KUBECONFIG: ./kubernetes/ifconfig.yaml
 
 
 
@@ -169,20 +167,10 @@ jobs:
             kubectl get nodes
             kubectl get namespaces
   # kubectl create namespace ${{ vars.NAMESPACE }}
-      env:
-        KUBECONFIG: ./kubernetes/ifconfig.yaml
+      # env:
+      #   KUBECONFIG: ./kubernetes/ifconfig.yaml
 
-    # - name: Replace tokens in manifests
-    #   uses: qmiroslav/replace-tokens@v1
-    #   with:
-    #         tokenPrefix: '_{_'
-    #         tokenSuffix: '_}_'
-    #         files:
-    #           kubernetes/development/*.yaml           
-    #   env:
-    #         NAMESPACE: ${{ vars.NAMESPACE }}
-    #         REPLICAS: ${{ vars.REPLICAS }}
-    #         IMAGE: $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:AbdallahElaraby-${{ github.sha }}
+
     - name: Replace tokens in manifests (all YAMLs)
       run: |
         for file in kubernetes/development/*.yaml; do
@@ -200,22 +188,22 @@ jobs:
       run: cat kubernetes/development/*.yaml
 
 
-    - name: Create MongoDB secret
-      run: |
-            kubectl create secret generic mongo-db-creds \
-            --namespace ${{ vars.NAMESPACE }} \
-            --from-literal=MONGO_URI="${{ env.MONGO_URI }}" \
-            --from-literal=MONGO_USERNAME="${{ env.MONGO_USERNAME }}" \
-            --from-literal=MONGO_PASSWORD="${{ env.MONGO_PASSWORD }}" \
-            --save-config --dry-run=client -o yaml | kubectl apply -f -
-      env:
-        KUBECONFIG: ./kubernetes/ifconfig.yaml
+    # - name: Create MongoDB secret
+    #   run: |
+    #         kubectl create secret generic mongo-db-creds \
+    #         --namespace ${{ vars.NAMESPACE }} \
+    #         --from-literal=MONGO_URI="${{ env.MONGO_URI }}" \
+    #         --from-literal=MONGO_USERNAME="${{ env.MONGO_USERNAME }}" \
+    #         --from-literal=MONGO_PASSWORD="${{ env.MONGO_PASSWORD }}" \
+    #         --save-config --dry-run=client -o yaml | kubectl apply -f -
+    #   env:
+    #     KUBECONFIG: ./kubernetes/ifconfig.yaml
 
 
-    - name: Deploy manifests
-      run: kubectl apply -f kubernetes/development
-      env:
-        KUBECONFIG: ./kubernetes/ifconfig.yaml
+    # - name: Deploy manifests
+    #   run: kubectl apply -f kubernetes/development
+    #   env:
+    #     KUBECONFIG: ./kubernetes/ifconfig.yaml
     - name: Fetch Kubernetes Cluster Details after deployment
       run: |
             
@@ -223,5 +211,6 @@ jobs:
             kubectl get pods --namespace ${{ vars.NAMESPACE }}
             kubectl get services --namespace ${{ vars.NAMESPACE }}
             kubectl get deployments --namespace ${{ vars.NAMESPACE }} 
-      env:
-        KUBECONFIG: ./kubernetes/ifconfig.yaml
+
+      # env:
+      #   KUBECONFIG: ./kubernetes/ifconfig.yaml
