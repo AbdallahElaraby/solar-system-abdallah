@@ -25,7 +25,7 @@ app.use(cors())
 // })
 
 mongoose.connect(
-  'mongodb://ahmed:gaITI%402025@github-actions-iti-2025.global.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000',
+  'mongodb://ahmed:gaITI@2025@github-actions-iti-2025.global.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000',
   {
     user: 'ahmed',
     pass: 'gaITI@2025',
@@ -36,7 +36,7 @@ mongoose.connect(
     if (err) {
       console.log("MongoDB connection error: " + err);
     } else {
-      console.log("✅ MongoDB connected successfully");
+      console.log("MongoDB connected successfully");
     }
   }
 );
