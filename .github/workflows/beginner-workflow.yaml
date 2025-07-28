@@ -155,9 +155,9 @@ jobs:
     #       method: kubeconfig
     #       kubeconfig: kubeconfig.yaml
     - name: Set up Kubeconfig
-      run: |
-        export KUBECONFIG=./kubernetes/ifconfig.yaml 
-        kubectl get nodes
+      run: kubectl get nodes
+      env:
+        KUBECONFIG: ./kubernetes/ifconfig.yaml
 
 
 
