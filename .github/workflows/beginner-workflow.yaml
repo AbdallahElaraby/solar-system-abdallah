@@ -18,7 +18,7 @@ jobs:
       mongodb:
         image: mongo:latest
     env:
-      MONGO_URI: 'mongodb://mongodb:27017/solar-system'
+      MONGO_URI: 'mongodb+srv://ankitvis609:Sonu135790@cluster0.esi3ulq.mongodb.net/todolistDb'
       MONGO_USERNAME: ahmed
       MONGO_PASSWORD: gaITI@2025
     steps:
