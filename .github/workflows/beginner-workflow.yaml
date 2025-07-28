@@ -7,7 +7,10 @@ on:
 #     branches:
 #       - main
 #       - 'feature/*'
-
+env:
+  CONTAINER_REGISTRY: "${{vars.CONTAINER_REGISTERY }}"
+  DOCKER_USERNAME: "${{ vars.DOCKER_USERNAME }}"
+  IMAGE_NAME: ga-application
 
 jobs:
   unit-testing:
@@ -17,8 +20,8 @@ jobs:
       mongodb-service:
         image: mongo:latest
     env:
-      # MONGO_URI: 'mongodb+srv://ahmed:gaITI@2025@github-actions-iti-2025.global.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000'
-      MONGO_URI: 'github-actions-iti-2025.global.mongocluster.cosmos.azure.com'
+      MONGO_URI: 'mongodb+srv://ahmed:gaITI@2025@github-actions-iti-2025.global.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000'
+      #MONGO_URI: 'github-actions-iti-2025.global.mongocluster.cosmos.azure.com'
       MONGO_USERNAME: ahmed
       MONGO_PASSWORD: gaITI@2025
     steps:
@@ -67,6 +70,21 @@ jobs:
   #       context: .
   #       push: true
   #       tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Docker Build
+        run: docker build -t $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:AbdallahElaraby:${{ github.sha }} .
+
+      - name: Docker Login
+        run: echo "${{ secrets.PASSWORD }}" | docker login $CONTAINER_REGISTRY -u "$DOCKER_USERNAME" --password-stdin
+
+      - name: Docker Push
+        run: docker push $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:AbdallahElaraby:${{ github.sha }}
 
     # - name: Docker Image Testing
     #   run: |
