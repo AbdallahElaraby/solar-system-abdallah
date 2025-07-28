@@ -134,7 +134,7 @@ jobs:
 
     - name: Fetch Kubernetes Cluster Details
       run: |
-            kubectl version 
+            kubectl version --client=true
             echo "-----------------------------------------"
             kubectl get nodes
             kubectl create namespace ${{ vars.NAMESPACE }}
@@ -182,7 +182,7 @@ jobs:
       run: kubectl apply -f kubernetes/development
     - name: Fetch Kubernetes Cluster Details after deployment
       run: |
-            kubectl version 
+            
             echo "-----------------------------------------"
             kubectl get pods --namespace ${{ vars.NAMESPACE }}
             
