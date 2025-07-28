@@ -25,7 +25,7 @@ app.use(cors())
 // })
 
 mongoose.connect(
-  'mongodb://ahmed:gaITI@2025@github-actions-iti-2025.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false',
+  'mongodb://ahmed:gaITI%402025@github-actions-iti-2025.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false',
   {
     user: 'ahmed',
     pass: 'gaITI@2025',
