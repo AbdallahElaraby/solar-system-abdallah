@@ -127,14 +127,14 @@ jobs:
       with:
             version: 'latest'
 
-    - name: Decode and save kubeconfig
+    - name: Decode kubeconfig
       run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig.yaml
-    - name: Set Kubeconfig Context
 
+    - name: Set Kubeconfig context
       uses: azure/k8s-set-context@v3
       with:
-        method: kubeconfig
-        kubeconfig: kubeconfig.yaml
+          method: kubeconfig
+          kubeconfig: kubeconfig.yaml
 
     - name: Fetch Kubernetes Cluster Details
       run: |
