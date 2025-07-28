@@ -167,7 +167,8 @@ jobs:
             kubectl version --client
             echo "-----------------------------------------"
             kubectl get nodes
-            kubectl create namespace ${{ vars.NAMESPACE }}
+            kubectl get namespaces
+  # kubectl create namespace ${{ vars.NAMESPACE }}
       env:
         KUBECONFIG: ./kubernetes/ifconfig.yaml
 
