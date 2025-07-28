@@ -25,8 +25,10 @@ app.use(cors())
 // })
 
 mongoose.connect(
-  'github-actions-iti-2025.global.mongocluster.cosmos.azure.com',
+  'mongodb://ahmed:gaITI@2025@github-actions-iti-2025.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false',
   {
+    user: 'ahmed',
+    pass: 'gaITI@2025',
     useNewUrlParser: true,
     useUnifiedTopology: true
   },
