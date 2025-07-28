@@ -17,7 +17,7 @@ jobs:
       mongodb-service:
         image: mongo:latest
     env:
-      MONGO_URI: 'mongodb+srv://ahmed:gaITI@2025@github-actions-iti-2025.global.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000'
+      MONGO_URI: 'github-actions-iti-2025.global.mongocluster.cosmos.azure.com'
       MONGO_USERNAME: ahmed
       MONGO_PASSWORD: gaITI@2025
     steps:
