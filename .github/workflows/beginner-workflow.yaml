@@ -181,7 +181,7 @@ jobs:
       env:
         NAMESPACE: ${{ vars.NAMESPACE }}
         REPLICAS: ${{ vars.REPLICAS }}
-        IMAGE: ${{ vars.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:AbdallahElaraby-${{ github.sha }}
+        IMAGE: ${{ vars.CONTAINER_REGISTERY }}/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:AbdallahElaraby-${{ github.sha }}
 
 
     - name: Show processed manifests
@@ -200,10 +200,10 @@ jobs:
         KUBECONFIG: ./kubernetes/ifconfig.yaml
 
 
-    # - name: Deploy manifests
-    #   run: kubectl apply -f kubernetes/development
-    #   env:
-    #     KUBECONFIG: ./kubernetes/ifconfig.yaml
+    - name: Deploy manifests
+      run: kubectl apply -f kubernetes/development
+      env:
+        KUBECONFIG: ./kubernetes/ifconfig.yaml
     - name: Fetch Kubernetes Cluster Details after deployment
       run: |
             
