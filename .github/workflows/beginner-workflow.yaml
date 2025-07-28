@@ -138,18 +138,28 @@ jobs:
             echo "-----------------------------------------"
             kubectl get nodes
 
-    - name: Replace tokens in manifests
-      uses: qmiroslav/replace-tokens@v1.0.0
-      with:
-            tokenPrefix: '_{_'
-            tokenSuffix: '_}_'
-            files:
-              kubernetes/development/*.yaml 
-                    
+    # - name: Replace tokens in manifests
+    #   uses: qmiroslav/replace-tokens@v1
+    #   with:
+    #         tokenPrefix: '_{_'
+    #         tokenSuffix: '_}_'
+    #         files:
+    #           kubernetes/development/*.yaml           
+    #   env:
+    #         NAMESPACE: ${{ vars.NAMESPACE }}
+    #         REPLICAS: ${{ vars.REPLICAS }}
+    #         IMAGE: $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:AbdallahElaraby-${{ github.sha }}
+    - name: Replace tokens in manifests (all YAMLs)
+      run: |
+        for file in kubernetes/development/*.yaml; do
+          echo "Processing $file"
+          envsubst < "$file" > "tmp.yaml" && mv "tmp.yaml" "$file"
+        done
+      shell: bash
       env:
-            NAMESPACE: ${{ vars.NAMESPACE }}
-            REPLICAS: ${{ vars.REPLICAS }}
-            IMAGE: $CONTAINER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:AbdallahElaraby-${{ github.sha }}
+        NAMESPACE: ${{ vars.NAMESPACE }}
+        REPLICAS: ${{ vars.REPLICAS }}
+        IMAGE: ${{ vars.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ vars.IMAGE_NAME }}:AbdallahElaraby-${{ github.sha }}
 
 
     - name: Show processed manifests
