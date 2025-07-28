@@ -168,6 +168,8 @@ jobs:
             echo "-----------------------------------------"
             kubectl get nodes
             kubectl create namespace ${{ vars.NAMESPACE }}
+      env:
+        KUBECONFIG: ./kubernetes/ifconfig.yaml
 
     # - name: Replace tokens in manifests
     #   uses: qmiroslav/replace-tokens@v1
