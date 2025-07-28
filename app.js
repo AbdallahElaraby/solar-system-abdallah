@@ -25,7 +25,7 @@ app.use(cors())
 // })
 
 mongoose.connect(
-  'mongodb://ahmed:gaITI@2025@github-actions-iti-2025.global.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000',
+  'github-actions-iti-2025.global.mongocluster.cosmos.azure.com',
   {
     user: 'ahmed',
     pass: 'gaITI@2025',
