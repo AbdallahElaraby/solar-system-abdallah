@@ -12,6 +12,7 @@ COPY . .
 # ENV MONGO_USERNAME=ahmed
 # ENV MONGO_PASSWORD=gaITI@2025
 
+
 EXPOSE 3000
 
 CMD [ "npm", "start" ]
