@@ -221,7 +221,7 @@ jobs:
             kubectl get pods --namespace ${{ vars.NAMESPACE }}
             kubectl get services --namespace ${{ vars.NAMESPACE }}
             kubectl get deployments --namespace ${{ vars.NAMESPACE }}
-            kubectl get logs --namespace ${{ vars.NAMESPACE }} solar-system-7df8f85dd5-hpmgb 
+            kubectl logs --namespace ${{ vars.NAMESPACE }} solar-system-7df8f85dd5-hpmgb 
 
       env:
         KUBECONFIG: ./kubernetes/ifconfig.yaml
