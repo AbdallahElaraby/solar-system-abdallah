@@ -2,11 +2,11 @@ name: Solar System Workflow beginner
 
 
 on:
-  workflow_dispatch:
-#   push:
-#     branches:
-#       - main
-#       - 'feature/*'
+#  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'feature/*'
 
 
 jobs:
@@ -15,10 +15,10 @@ jobs:
     name: Unit Testing
     runs-on: ubuntu-latest
     services:
-      mongodb-service:
+      mongodb:
         image: mongo:latest
     env:
-      MONGO_URI: 'mongodb://mongodb-service:27017/solar-system'
+      MONGO_URI: 'mongodb://mongodb:27017/solar-system'
       MONGO_USERNAME: ahmed
       MONGO_PASSWORD: gaITI@2025
     steps:
